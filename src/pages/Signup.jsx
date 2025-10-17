@@ -1,6 +1,8 @@
 import { useState } from "react";
 
 const Signup = () => {
+  const [profileImage, setProfileImage] = useState(null);
+  const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -10,8 +12,16 @@ const Signup = () => {
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
+    } else if (password.length < 8) {
+      alert("Password must be at least 8 characters long");
+      return;
+    } else if (!email.includes("@")) {
+      alert("Please enter a valid email");
+      return;
+    } else if (fullname.trim() === "") {
+      alert("Name cannot be empty");
+      return;
     }
-    console.log(email, password);
   };
 
   return (
@@ -74,7 +84,76 @@ const Signup = () => {
 
             {/* Form */}
             <form onSubmit={handleSubmit}>
+              <div>
+                <label className="block text-sm mb-2 font-medium text-gray-700">
+                  Profile Image
+                </label>
+                <label className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 focus-within:border-blue-500">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    onChange={(e) =>
+                      setProfileImage(e.target.files?.[0] ?? null)
+                    }
+                    required
+                  />
+                  <svg
+                    className="w-6 h-6 text-blue-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                  </svg>
+                  <div className="text-sm text-gray-600">
+                    {profileImage ? profileImage.name : "Upload profile photo"}
+                  </div>
+                </label>
+              </div>
               <div className="grid gap-y-4">
+                {/* Form Group */}
+                <div>
+                  <label htmlFor="fullname" className="block text-sm mb-2">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      id="fullname"
+                      name="fullname"
+                      value={fullname}
+                      onChange={(e) => setFullname(e.target.value)}
+                      className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                      required
+                      aria-describedby="fullname-error"
+                    />
+                    <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                      <svg
+                        className="size-5 text-red-500"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        viewBox="0 0 16 16"
+                        aria-hidden="true"
+                      >
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <p
+                    className="hidden text-xs text-red-600 mt-2"
+                    id="fullname-error"
+                  >
+                    Name cannot be empty
+                  </p>
+                </div>
+
                 {/* Form Group */}
                 <div>
                   <label htmlFor="email" className="block text-sm mb-2">
