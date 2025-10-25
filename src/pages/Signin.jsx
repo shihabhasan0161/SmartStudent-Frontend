@@ -1,11 +1,41 @@
 import { useState } from "react";
 import {Link, useNavigate } from "react-router-dom";
+import { config } from "../util/config.jsx";
+import { endpoints } from "../util/apiEndpoints.js";
+import toast from "react-hot-toast";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    // signin api call
+    try {
+      const response = await config.post(endpoints.login, {
+        email,
+        password,
+      });
+      if (response.status === 200) {
+        toast.success("Login successful!");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
+      }
+    } catch (e) {
+      setError(e.message);
+      toast.error(`Login failed, Please try again!`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 space-y-6">
@@ -35,7 +65,7 @@ const Signin = () => {
             </div>
 
             {/* Form */}
-            <form>
+            <form onSubmit={handleSubmit}>
               <div></div>
               <div className="grid gap-y-4">
                 {/* Form Group */}
@@ -115,10 +145,11 @@ const Signin = () => {
                 </div>
 
                 <button
+                  disabled={loading}
                   type="submit"
                   className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  Sign in
+                  {loading ? "Signing in..." : "Sign in"}
                 </button>
               </div>
             </form>

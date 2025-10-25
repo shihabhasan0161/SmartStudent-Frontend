@@ -11,9 +11,10 @@ const config = axios.create({
 const skipAuthEndpoints = ["login", "register", "status", "activate"];
 
 // Add a request interceptor
-config.interceptors.request.use((request) => {
+config.interceptors.request.use(
+  (request) => {
     const skipAuth = skipAuthEndpoints.some((endpoint) => {
-      request.url?.includes(endpoint)
+      request.url?.includes(endpoint);
     });
     if (!skipAuth) {
       const token = localStorage.getItem("token");
@@ -22,21 +23,32 @@ config.interceptors.request.use((request) => {
       }
     }
     return request;
-} , (error) => {
+  },
+  (error) => {
     // Do something with request error
     return Promise.reject(error);
-});
+  }
+);
 
 // Add a response interceptor
-config.interceptors.response.use((response) => {
+config.interceptors.response.use(
+  (response) => {
     return response;
-}, (error) => {
+  },
+  (error) => {
     if (error.response) {
-        if(error.response.status === 401 || error.response.status === 500) {
-            console.error("Something went wrong! Please try again later.");
-        }
+      if (error.response.status === 401) {
+        console.error("Unauthorized! Please login again.");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/signin";
+      } else if (error.response.status === 500) {
+        console.error("Server error! Please try again later.");
+      }
     }
     return Promise.reject(error);
-});
+  }
+);
 
+export { config };
 export default config;

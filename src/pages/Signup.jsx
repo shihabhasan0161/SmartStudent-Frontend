@@ -1,39 +1,45 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {config} from "../util/config.jsx";
-import {endpoints} from "../util/apiEndPoints.js";
+import { config } from "../util/config.jsx";
+import { endpoints } from "../util/apiEndpoints.js";
 import toast from "react-hot-toast";
 
 const Signup = () => {
-  const [profileImage, setProfileImage] = useState(null);
-  const [fullname, setFullname] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false); // For handling loading state
 
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
-    if (!email.trim()) {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return re.test(String(email).toLowerCase());
-    }
+    if (!email.trim()) return false;
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (fullname.trim() === "") {
+    setLoading(true);
+    setError(null);
+
+    if (fullName.trim() === "") {
       setError("Full name cannot be empty");
+      setLoading(false); // Stop loading if validation fails
       return;
     } else if (!validateEmail(email)) {
       setError("Please enter a valid email");
+      setLoading(false);
       return;
     } else if (password.length < 8 || !password.trim()) {
       setError("Password must be at least 8 characters long");
+      setLoading(false);
       return;
     } else if (password !== confirmPassword) {
       setError("Passwords do not match");
+      setLoading(false);
       return;
     }
     setError("");
@@ -41,17 +47,21 @@ const Signup = () => {
     // signup api call
     try {
       const response = await config.post(endpoints.register, {
-        fullname,
+        fullName,
         email,
         password,
       });
       if (response.status === 201) {
-        toast.success("Registration successful! Please sign in.");
-        navigate("/signin");
+        toast.success("Registration successful! Please check your email to verify your account.");
+        setTimeout(() => {
+          navigate("/signin");
+        }, 2000);
       }
     } catch (e) {
-      console.error(e);
       setError(e.message);
+      toast.error(`Signup failed, Please try again!`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,19 +129,19 @@ const Signup = () => {
               <div className="grid gap-y-4">
                 {/* Form Group */}
                 <div>
-                  <label htmlFor="fullname" className="block text-sm mb-2">
+                  <label htmlFor="fullName" className="block text-sm mb-2">
                     Full Name
                   </label>
                   <div className="relative">
                     <input
                       type="text"
-                      id="fullname"
-                      name="fullname"
-                      value={fullname}
-                      onChange={(e) => setFullname(e.target.value)}
+                      id="fullName"
+                      name="fullName"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
                       className="py-2.5 sm:py-3 px-4 block w-full border-gray-200 rounded-lg sm:text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                       required
-                      aria-describedby="fullname-error"
+                      aria-describedby="fullName-error"
                     />
                     <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                       <svg
@@ -297,10 +307,11 @@ const Signup = () => {
                 {/* End Checkbox */}
 
                 <button
+                  disabled={loading}
                   type="submit"
                   className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  Sign up
+                  {loading ? "Signing up..." : "Sign up"}
                 </button>
               </div>
             </form>
