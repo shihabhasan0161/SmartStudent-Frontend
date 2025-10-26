@@ -1,21 +1,41 @@
-import { useState } from "react";
-import {Link, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { config } from "../util/config.jsx";
 import { endpoints } from "../util/apiEndpoints.js";
 import toast from "react-hot-toast";
+import { AppContext } from "../context/AppContext.jsx";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { setUser } = useContext(AppContext);
 
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    if (!email.trim()) return false;
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    // validate the form first
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email");
+      setLoading(false);
+      return;
+    } else if (password.length < 8 || !password.trim()) {
+      setError("Password must be at least 8 characters long");
+      setLoading(false);
+      return;
+    }
+    setError("");
 
     // signin api call
     try {
@@ -23,14 +43,15 @@ const Signin = () => {
         email,
         password,
       });
-      if (response.status === 200) {
-        toast.success("Login successful!");
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 2000);
-      }
+      const { token, user } = response.data;
+      // store the token in localstorage
+      localStorage.setItem("token", token);
+      setUser(user);
+      toast.success("Login successful!");
+      navigate("/dashboard");
     } catch (e) {
       setError(e.message);
+      console.error("Login failed:", e);
       toast.error(`Login failed, Please try again!`);
     } finally {
       setLoading(false);
