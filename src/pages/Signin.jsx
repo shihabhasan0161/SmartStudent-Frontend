@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { config } from "../util/config.jsx";
 import { endpoints } from "../util/apiEndpoints.js";
@@ -11,6 +11,10 @@ const Signin = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { setUser } = useContext(AppContext);
+
+  useEffect(() => {
+    window.HSStaticMethods?.autoInit?.();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -51,7 +55,6 @@ const Signin = () => {
       navigate("/dashboard");
     } catch (e) {
       setError(e.message);
-      console.error("Login failed:", e);
       toast.error(`Login failed, Please try again!`);
     } finally {
       setLoading(false);
@@ -128,7 +131,6 @@ const Signin = () => {
                 </div>
                 {/* End Form Group */}
 
-                {/* Form Group */}
                 <div>
                   <label htmlFor="password" className="block text-sm mb-2">
                     Password
@@ -136,7 +138,7 @@ const Signin = () => {
                   <div className="relative">
                     <input
                       type="password"
-                      id="password"
+                      id="signin-password"
                       name="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -144,18 +146,53 @@ const Signin = () => {
                       required
                       aria-describedby="password-error"
                     />
-                    <div className="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
+                    <button
+                      type="button"
+                      data-hs-toggle-password='{"target":"#signin-password"}'
+                      className="absolute inset-y-0 end-0 flex items-center z-20 px-3 text-gray-400 hover:text-blue-600 focus:outline-hidden"
+                    >
                       <svg
-                        className="size-5 text-red-500"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        viewBox="0 0 16 16"
-                        aria-hidden="true"
+                        className="shrink-0 size-3.5"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       >
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                        <path
+                          className="hs-password-active:hidden"
+                          d="M9.88 9.88a3 3 0 1 0 4.24 4.24"
+                        ></path>
+                        <path
+                          className="hs-password-active:hidden"
+                          d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+                        ></path>
+                        <path
+                          className="hs-password-active:hidden"
+                          d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+                        ></path>
+                        <line
+                          className="hs-password-active:hidden"
+                          x1="2"
+                          x2="22"
+                          y1="2"
+                          y2="22"
+                        ></line>
+                        <path
+                          className="hidden hs-password-active:block"
+                          d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"
+                        ></path>
+                        <circle
+                          className="hidden hs-password-active:block"
+                          cx="12"
+                          cy="12"
+                          r="3"
+                        ></circle>
                       </svg>
-                    </div>
+                    </button>
                   </div>
                   <p
                     className="hidden text-xs text-red-600 mt-2"
