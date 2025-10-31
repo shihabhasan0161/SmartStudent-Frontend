@@ -14,7 +14,7 @@ const skipAuthEndpoints = ["login", "register", "status", "activate"];
 config.interceptors.request.use(
   (request) => {
     const skipAuth = skipAuthEndpoints.some((endpoint) => {
-      request.url?.includes(endpoint);
+      return request.url?.includes(endpoint);
     });
     if (!skipAuth) {
       const token = localStorage.getItem("token");

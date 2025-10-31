@@ -65,7 +65,7 @@ const Signup = () => {
       }
     } catch (e) {
       setError(e.message);
-      toast.error(`Signup failed, Please try again!`);
+      toast.error(`Registration failed, Please try again!`);
     } finally {
       setLoading(false);
     }
