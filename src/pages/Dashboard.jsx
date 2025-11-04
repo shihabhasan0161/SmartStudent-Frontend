@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext.jsx";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import Sidebar from "../components/Sidebar.jsx";
 
 const Dashboard = () => {
   const { setUser } = useContext(AppContext);
@@ -28,17 +29,6 @@ const Dashboard = () => {
       {/* ========== HEADER ========== */}
       <header className="flex flex-wrap  md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200">
         <nav className="relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:justify-between md:gap-3 py-2 px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center gap-x-1">
-            <a
-              className="flex-none font-semibold text-xl text-black focus:outline-hidden focus:opacity-80"
-              href="#"
-              aria-label="Brand"
-            >
-              SmartStudent
-            </a>
-            {/* End Collapse Button */}
-          </div>
-
           {/* Collapse */}
           <div
             id="hs-header-base"
@@ -73,6 +63,7 @@ const Dashboard = () => {
       </header>
       {/* ========== END HEADER ========== */}
       {/* Main */}
+      <Sidebar />
       <main className="flex-grow">
         <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10">
           {/* Title */}
