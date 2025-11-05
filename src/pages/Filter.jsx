@@ -1,5 +1,9 @@
 const Filter = () => {
-  return <div>Filter Page</div>;
-}
+  return (
+    <Dashboard>
+      <div>Filter Page</div>
+    </Dashboard>
+  );
+};
 
 export default Filter;

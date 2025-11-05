@@ -1,16 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Dashboard from "./pages/Dashboard";
-import Income from "./pages/income";
-import Expense from "./pages/expense";
-import Category from "./pages/category";
+import Income from "./pages/Income.jsx";
+import Expense from "./pages/Expense.jsx";
+import Category from "./pages/Category.jsx";
 import Filter from "./pages/Filter";
 import { Toaster } from "react-hot-toast";
 import Signup from "./pages/Signup";
 import About from "./pages/About";
 import Signin from "./pages/Signin";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-
 
 const App = () => {
   return (
@@ -23,16 +22,16 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/incomes" element={<Income />} />
+            <Route path="/expenses" element={<Expense />} />
+            <Route path="/categories" element={<Category />} />
+            <Route path="/filter" element={<Filter />} />
           </Route>
-          <Route path="/income" element={<Income />} />
-          <Route path="/expense" element={<Expense />} />
-          <Route path="/category" element={<Category />} />
-          <Route path="/filter" element={<Filter />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </BrowserRouter>
     </>
-  )
-}
+  );
+};
 
 export default App;

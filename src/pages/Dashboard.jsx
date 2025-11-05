@@ -1,12 +1,20 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext.jsx";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar.jsx";
+import { baseURL, endpoints } from "../util/apiEndpoints.js";
+import axios from "axios";
 
 const Dashboard = () => {
-  const { setUser } = useContext(AppContext);
-  const [setError] = useState(null);
+  const { setUser, user } = useContext(AppContext);
+  const [data, setData] = useState({
+    totalIncome: 0,
+    totalExpense: 0,
+    balance: 0,
+    recentTransactions: [],
+  });
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -21,100 +29,301 @@ const Dashboard = () => {
       toast.error("Failed to log out");
     }
   };
+
+  // Fetch the dashboard data
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/signin", { replace: true });
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${baseURL}${endpoints.dashboard}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setData(response.data);
+      } catch (error) {
+        setError(error);
+        toast.error("Failed to fetch dashboard data");
+      }
+    };
+
+    fetchData();
+  }, [navigate]);
+
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <div className="lg:flex lg:h-screen bg-gray-50">
+      {/* Background pattern */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="absolute inset-0 bg-[url('https://preline.co/assets/svg/examples/polygon-bg-element.svg')] bg-no-repeat bg-top bg-cover opacity-80"></div>
+        <div className="absolute inset-0 bg-[url('https://preline.co/assets/svg/examples/polygon-bg-element.svg')] bg-no-repeat bg-top bg-cover opacity-10"></div>
       </div>
-      {/* ========== HEADER ========== */}
-      <header className="flex flex-wrap  md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200">
-        <nav className="relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:justify-between md:gap-3 py-2 px-4 sm:px-6 lg:px-8">
-          {/* Collapse */}
-          <div
-            id="hs-header-base"
-            className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow md:block "
-            aria-labelledby="hs-header-base-collapse"
+
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main content */}
+      <main className="flex-1 lg:ml-64 min-h-screen flex flex-col">
+        {/* Mobile hamburger button */}
+        <div className="lg:hidden fixed top-4 left-4 z-50">
+          <button
+            type="button"
+            className="p-2 bg-white border border-gray-200 text-gray-600 hover:bg-gray-100 rounded-lg shadow-sm"
+            data-hs-overlay="#hs-sidebar-footer"
+            aria-label="Toggle navigation"
           >
-            <div className="overflow-hidden overflow-y-auto max-h-[75vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
-              <div className="py-2 md:py-0  flex flex-col md:flex-row md:items-center gap-0.5 md:gap-1">
-                <div className="grow">
-                  <div className="flex flex-col md:flex-row md:justify-end md:items-center gap-0.5 md:gap-1"></div>
-                </div>
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
 
-                <div className="my-2 md:my-0 md:mx-2">
-                  <div className="w-full h-px md:w-px md:h-4 bg-gray-100 md:bg-gray-300"></div>
-                </div>
+        {/* Top header with logout */}
+        <header className="bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-gray-800 lg:block hidden">
+              Dashboard
+            </h2>
+            <div className="lg:hidden h-8"></div>
+            <button
+              className="py-2 px-4 inline-flex items-center font-medium text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden ml-auto"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </div>
+        </header>
 
-                {/* Button Group */}
-                <div className=" flex flex-wrap items-center gap-x-1.5">
-                  <button
-                    className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
+        {/* Dashboard content */}
+        <div className="flex-1 p-4 sm:p-6 lg:p-8">
+          <div className="max-w-7xl mx-auto">
+            {/* Welcome section */}
+            <div className="mb-8">
+              <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+                Welcome back! <span>{user?.fullName}</span>
+              </h1>
+              <p className="mt-2 text-gray-600">
+                Here's an overview of your finances.
+              </p>
+            </div>
+
+            {/* Stats cards */}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <svg
+                        className="h-6 w-6 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 truncate">
+                          Total Income
+                        </dt>
+                        <dd className="text-lg font-medium text-gray-900">
+                          ${data.totalIncome}
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
                 </div>
-                {/* End Button Group */}
+              </div>
+
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <svg
+                        className="h-6 w-6 text-red-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M20 12H4"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 truncate">
+                          Total Expenses
+                        </dt>
+                        <dd className="text-lg font-medium text-gray-900">
+                          ${data.totalExpense}
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white overflow-hidden shadow rounded-lg">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <svg
+                        className="h-6 w-6 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 truncate">
+                          Balance
+                        </dt>
+                        <dd className="text-lg font-medium text-gray-900">
+                          ${data.totalIncome - data.totalExpense}
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent transactions */}
+            <div className="bg-white shadow rounded-lg">
+              <div className="px-6 py-5 sm:p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Recent Transactions
+                </h3>
+
+                {data.recentTransactions.length > 0 ? (
+                  <ul className="divide-y divide-gray-200">
+                    {data.recentTransactions.map((transaction) => (
+                      <li
+                        key={transaction.id}
+                        className="flex items-center justify-between py-3"
+                      >
+                        {/* Left side */}
+                        <div className="flex items-center space-x-3">
+                          <div
+                            className={`w-8 h-8 flex items-center justify-center rounded-full ${
+                              transaction.type === "income"
+                                ? "bg-green-100 text-green-600"
+                                : "bg-red-100 text-red-600"
+                            }`}
+                          >
+                            {transaction.type === "income" ? (
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M12 4v16m8-8H4"
+                                />
+                              </svg>
+                            ) : (
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M20 12H4"
+                                />
+                              </svg>
+                            )}
+                          </div>
+
+                          {/* Name and date */}
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">
+                              {transaction.name || "Unnamed Transaction"}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {transaction.date}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Right side */}
+                        <div className="text-right">
+                          <span
+                            className={`block text-sm font-semibold ${
+                              transaction.type === "income"
+                                ? "text-green-600"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {transaction.type === "income" ? "+" : "-"}$
+                            {transaction.amount}
+                          </span>
+                          <span
+                            className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${
+                              transaction.type === "income"
+                                ? "bg-green-50 text-green-700"
+                                : "bg-red-50 text-red-700"
+                            }`}
+                          >
+                            {transaction.type}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-gray-500 text-center py-8">
+                    No recent transactions found.
+                  </p>
+                )}
               </div>
             </div>
           </div>
-          {/* End Collapse */}
-        </nav>
-      </header>
-      {/* ========== END HEADER ========== */}
-      {/* Main */}
-      <Sidebar />
-      <main className="flex-grow">
-        <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10">
-          {/* Title */}
-          <div className="mt-5 max-w-2xl text-center mx-auto">
-            <h1 className="block font-bold text-gray-800 text-4xl md:text-5xl lg:text-6xl">
-              Take Control of Your Student
-              <span className="bg-clip-text bg-linear-to-tl from-blue-600 to-violet-600 text-transparent">
-                {" "}
-                Finances
-              </span>
-            </h1>
-          </div>
-          {/* End Title */}
-
-          <div className="mt-5 max-w-3xl text-center mx-auto">
-            <p className="text-lg text-gray-600">
-              SmartStudent helps you track expenses, set budgets, and build
-              better money habits — all in one clean dashboard.
-            </p>
-          </div>
-
-          {/* Buttons */}
-          <div className="mt-8 gap-3 flex justify-center">
-            <a
-              className="inline-flex justify-center items-center gap-x-3 text-center bg-linear-to-tl from-blue-600 to-violet-600 hover:from-violet-600 hover:to-blue-600 border border-transparent text-white text-sm font-medium rounded-md focus:outline-hidden focus:from-violet-600 focus:to-blue-600 py-3 px-4"
-              href="/signup"
-            >
-              Start Tracking Now
-              <svg
-                className="shrink-0 size-4"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="m9 18 6-6-6-6" />
-              </svg>
-            </a>
-          </div>
-          {/* End Buttons */}
         </div>
+
+        {/* Footer */}
+        <footer className="bg-white border-t border-gray-200 py-4 text-center text-gray-500 text-sm mt-auto">
+          © {new Date().getFullYear()} SmartStudent. All rights reserved.
+        </footer>
       </main>
-      {/* footer */}
-      <footer className="w-full border-t border-gray-200 py-6 text-center text-gray-500 text-sm bg-white/70 backdrop-blur-sm">
-        © {new Date().getFullYear()} SmartStudent. All rights reserved.
-      </footer>
     </div>
   );
 };

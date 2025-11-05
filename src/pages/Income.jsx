@@ -1,5 +1,11 @@
+import Dashboard from "./Dashboard";
+
 const Income = () => {
-  return <div>Income Page</div>;
-}
+  return (
+    <Dashboard>
+      <div>Income Page</div>
+    </Dashboard>
+  );
+};
 
 export default Income;
