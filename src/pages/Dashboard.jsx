@@ -3,8 +3,8 @@ import { AppContext } from "../context/AppContext.jsx";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar.jsx";
-import { baseURL, endpoints } from "../util/apiEndpoints.js";
-import axios from "axios";
+import {endpoints } from "../util/apiEndpoints.js";
+import config from "../util/config.jsx";
 
 const Dashboard = () => {
   const { setUser, user } = useContext(AppContext);
@@ -40,11 +40,7 @@ const Dashboard = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${baseURL}${endpoints.dashboard}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await config.get(endpoints.dashboard);
         setData(response.data);
       } catch (error) {
         setError(error);

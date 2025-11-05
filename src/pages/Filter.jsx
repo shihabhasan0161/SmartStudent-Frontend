@@ -1,3 +1,5 @@
+import Dashboard from "./Dashboard";
+
 const Filter = () => {
   return (
     <Dashboard>
