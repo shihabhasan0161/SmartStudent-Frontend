@@ -258,11 +258,7 @@ const Expense = () => {
                           {exp.name}
                         </p>
                         <p className="text-xs text-gray-500">
-                          Category:{" "}
-                          {
-                            categories.find((cat) => cat._id === exp.categoryId)
-                              ?.name
-                          }
+                          Category: {categories.find((cat) => cat.name === exp.categoryName)?.name}
                         </p>
                       </div>
                       <span className="text-red-600 font-semibold">

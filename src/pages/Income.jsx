@@ -258,11 +258,7 @@ const Income = () => {
                           {inc.name}
                         </p>
                         <p className="text-xs text-gray-500">
-                          Category:{" "}
-                          {
-                            categories.find((cat) => cat._id === inc.categoryId)
-                              ?.name
-                          }
+                          Category: {categories.find((cat) => cat.name === inc.categoryName)?.name}
                         </p>
                       </div>
                       <span className="text-green-600 font-semibold">
