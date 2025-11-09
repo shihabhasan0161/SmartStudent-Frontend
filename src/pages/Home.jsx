@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Home = () => {
@@ -40,13 +40,13 @@ const Home = () => {
       <header className="flex flex-wrap  md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200">
         <nav className="relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:justify-between md:gap-3 py-2 px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center gap-x-1">
-            <a
+            <Link
               className="flex-none font-semibold text-xl text-black focus:outline-hidden focus:opacity-80"
-              href="#"
+              to="/"
               aria-label="Brand"
             >
               SmartStudent
-            </a>
+            </Link>
 
             {/* Collapse Button */}
             <button
@@ -104,9 +104,9 @@ const Home = () => {
               <div className="py-2 md:py-0  flex flex-col md:flex-row md:items-center gap-0.5 md:gap-1">
                 <div className="grow">
                   <div className="flex flex-col md:flex-row md:justify-end md:items-center gap-0.5 md:gap-1">
-                    <a
+                    <Link
                       className="p-2 flex items-center text-sm bg-gray-100 text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-hidden focus:bg-gray-100"
-                      href="#"
+                      to="/"
                       aria-current="page"
                     >
                       <svg
@@ -125,7 +125,7 @@ const Home = () => {
                         <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                       </svg>
                       Home
-                    </a>
+                    </Link>
 
                     <button
                       className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-hidden focus:bg-gray-100"
@@ -153,9 +153,9 @@ const Home = () => {
                       Dashboard
                     </button>
 
-                    <a
+                    <Link
                       className="p-2 flex items-center text-sm text-gray-800 hover:bg-gray-100 rounded-lg focus:outline-hidden focus:bg-gray-100"
-                      href="/about"
+                      to="/about"
                     >
                       <svg
                         className="shrink-0 size-4 me-3 md:me-2 block md:hidden"
@@ -175,7 +175,7 @@ const Home = () => {
                         <path d="M10 6h8v4h-8V6Z" />
                       </svg>
                       About
-                    </a>
+                    </Link>
                   </div>
                 </div>
 
@@ -187,18 +187,18 @@ const Home = () => {
                 <div className="flex flex-wrap items-center gap-x-1.5">
                   {!isAuthenticated ? (
                     <>
-                      <a
+                      <Link
                         className="py-[7px] px-2.5 inline-flex items-center font-medium text-sm rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden"
-                        href="/signin"
+                        to="/signin"
                       >
                         Signin
-                      </a>
-                      <a
+                      </Link>
+                      <Link
                         className="py-2 px-2.5 inline-flex items-center font-medium text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden"
-                        href="/signup"
+                        to="/signup"
                       >
                         Signup
-                      </a>
+                      </Link>
                     </>
                   ) : (
                     <button
@@ -240,12 +240,13 @@ const Home = () => {
           </div>
 
           {/* Buttons */}
-          <div className="mt-8 gap-3 flex justify-center">
-            <a
-              className="inline-flex justify-center items-center gap-x-3 text-center bg-linear-to-tl from-blue-600 to-violet-600 hover:from-violet-600 hover:to-blue-600 border border-transparent text-white text-sm font-medium rounded-md focus:outline-hidden focus:from-violet-600 focus:to-blue-600 py-3 px-4"
-              href="/signup"
-            >
-              Start Tracking Now
+          {!isAuthenticated ? (
+            <div className="mt-8 gap-3 flex justify-center">
+              <Link
+                className="inline-flex justify-center items-center gap-x-3 text-center bg-linear-to-tl from-blue-600 to-violet-600 hover:from-violet-600 hover:to-blue-600 border border-transparent text-white text-sm font-medium rounded-md focus:outline-hidden focus:from-violet-600 focus:to-blue-600 py-3 px-4"
+                to="/signup"
+              >
+                Start Tracking Now
               <svg
                 className="shrink-0 size-4"
                 xmlns="http://www.w3.org/2000/svg"
@@ -260,8 +261,9 @@ const Home = () => {
               >
                 <path d="m9 18 6-6-6-6" />
               </svg>
-            </a>
+            </Link>
           </div>
+          ) : navigate("/dashboard")}
           {/* End Buttons */}
         </div>
       </main>
