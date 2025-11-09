@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard.jsx";
 import Income from "./pages/Income.jsx";
 import Expense from "./pages/Expense.jsx";
 import Category from "./pages/Category.jsx";
-import Filter from "./pages/Filter";
+import Filter from "./pages/Filter.jsx";
 import { Toaster } from "react-hot-toast";
-import Signup from "./pages/Signup";
-import About from "./pages/About";
-import Signin from "./pages/Signin";
+import Signup from "./pages/Signup.jsx";
+import About from "./pages/About.jsx";
+import Signin from "./pages/Signin.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const App = () => {
