@@ -7,4 +7,5 @@ export const endpoints = {
   incomes: "incomes",
   expenses: "expenses",
   categories: "categories",
+  filter: "filter",
 };
