@@ -10,6 +10,7 @@ import Signup from "./pages/Signup.jsx";
 import About from "./pages/About.jsx";
 import Signin from "./pages/Signin.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import OAuth2Redirect from "./pages/OAuth2Redirect.jsx";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
+           <Route path="/oauth2/redirect" element={<OAuth2Redirect />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/incomes" element={<Income />} />

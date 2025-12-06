@@ -1,7 +1,7 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { config } from "../util/config.jsx";
-import { endpoints } from "../util/apiEndpoints.js";
+import { baseURL, endpoints } from "../util/apiEndpoints.js";
 import toast from "react-hot-toast";
 import { AppContext } from "../context/AppContext.jsx";
 
@@ -11,10 +11,6 @@ const Signin = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { setUser } = useContext(AppContext);
-
-  useEffect(() => {
-    window.HSStaticMethods?.autoInit?.();
-  }, []);
 
   const navigate = useNavigate();
 
@@ -61,6 +57,15 @@ const Signin = () => {
     }
   };
 
+  // Handling social login here
+  const handleGoogleLogin = () => {
+    window.location.href = baseURL + endpoints.googleAuth;
+  }
+
+  // const handleGitHubLogin = () => {
+  //   window.location.href = baseURL + endpoints.githubAuth;
+  // }
+
   return (
     <section className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 space-y-6">
       <a href="/" className="flex items-center space-x-2">
@@ -72,15 +77,26 @@ const Signin = () => {
         <div className="p-4 sm:p-7">
           <div className="text-center">
             <h1 className="block text-2xl font-bold text-gray-800">Sign in</h1>
-            <p className="mt-2 text-sm text-gray-600">
-              Don't have an account?
-              <Link
-                className="ml-2 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
-                to="../signup"
-              >
-                Sign up here
-              </Link>
-            </p>
+
+            {/* Social Login */}
+            <div className="mt-7 flex flex-col gap-2">
+              <button onClick={handleGoogleLogin} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
+                <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="Google"
+                  className="h-[18px] w-[18px]"
+                ></img>
+                Continue with Google
+              </button>
+              {/* <button onClick={handleGitHubLogin} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
+                <img
+                  src="https://www.svgrepo.com/show/512317/github-142.svg"
+                  alt="GitHub"
+                  className="h-[18px] w-[18px] "
+                ></img>
+                Continue with GitHub
+              </button> */}
+            </div>
           </div>
 
           <div className="mt-5">
@@ -212,6 +228,17 @@ const Signin = () => {
               </div>
             </form>
             {/* End Form */}
+          </div>
+          <div className="flex justify-center mt-4">
+            <p className="content-center text-sm text-gray-600">
+              Don't have an account?
+              <Link
+                className="ml-2 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
+                to="../signup"
+              >
+                Sign up here
+              </Link>
+            </p>
           </div>
         </div>
       </div>

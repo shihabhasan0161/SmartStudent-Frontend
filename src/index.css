@@ -6,3 +6,7 @@
 
 /* Plugins */
 @plugin "@tailwindcss/forms";
+
+.hs-overlay-backdrop {
+  display: none !important;
+}

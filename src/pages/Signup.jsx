@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { config } from "../util/config.jsx";
 import { endpoints } from "../util/apiEndpoints.js";
 import toast from "react-hot-toast";
+import { baseURL } from "../util/apiEndpoints.js";
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
@@ -11,10 +12,6 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false); // For handling loading state
-
-  useEffect(() => {
-    window.HSStaticMethods?.autoInit?.();
-  }, []);
 
   const navigate = useNavigate();
 
@@ -71,6 +68,15 @@ const Signup = () => {
     }
   };
 
+    // Handling social signup here
+    const handleGoogleSignup = () => {
+      window.location.href = baseURL + endpoints.googleAuth;
+    }
+  
+    // const handleGitHubSignup = () => {
+    //   window.location.href = baseURL + endpoints.githubAuth;
+    // }
+
   return (
     <section className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 space-y-6">
       <a href="/" className="flex items-center space-x-2">
@@ -82,15 +88,25 @@ const Signup = () => {
         <div className="p-4 sm:p-7">
           <div className="text-center">
             <h1 className="block text-2xl font-bold text-gray-800">Sign up</h1>
-            <p className="mt-2 text-sm text-gray-600">
-              Already have an account?
-              <Link
-                className="ml-2 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
-                to="../signin"
-              >
-                Sign in here
-              </Link>
-            </p>
+            {/* Social Signup */}
+            <div className="mt-7 flex flex-col gap-2">
+              <button onClick={handleGoogleSignup} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
+                <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="Google"
+                  className="h-[18px] w-[18px]"
+                ></img>
+                Continue with Google
+              </button>
+              {/* <button onClick={handleGitHubSignup} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-black outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
+                <img
+                  src="https://www.svgrepo.com/show/512317/github-142.svg"
+                  alt="GitHub"
+                  className="h-[18px] w-[18px] "
+                ></img>
+                Continue with GitHub
+              </button> */}
+            </div>
           </div>
 
           <div className="mt-5">
@@ -354,30 +370,6 @@ const Signup = () => {
                   </p>
                 </div>
 
-                {/* Checkbox */}
-                <div className="flex items-center">
-                  <div className="flex">
-                    <input
-                      id="remember-me"
-                      name="remember-me"
-                      type="checkbox"
-                      className="shrink-0 mt-0.5 border-gray-200 rounded-sm text-blue-600 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div className="ms-3">
-                    <label htmlFor="remember-me" className="text-sm">
-                      I accept the{" "}
-                      <a
-                        className="text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
-                        href="#"
-                      >
-                        Terms and Conditions
-                      </a>
-                    </label>
-                  </div>
-                </div>
-                {/* End Checkbox */}
-
                 <button
                   disabled={loading}
                   type="submit"
@@ -388,6 +380,17 @@ const Signup = () => {
               </div>
             </form>
             {/* End Form */}
+          </div>
+          <div className="flex justify-center mt-4">
+            <p className="text-sm text-gray-600">
+              Already have an account?
+              <Link
+                className="ml-2 text-blue-600 decoration-2 hover:underline focus:outline-hidden focus:underline font-medium"
+                to="../signin"
+              >
+                Sign in here
+              </Link>
+            </p>
           </div>
         </div>
       </div>
