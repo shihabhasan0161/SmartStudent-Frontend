@@ -70,13 +70,37 @@ const Filter = () => {
       <Sidebar />
 
       <main className="flex-1 lg:ml-64 min-h-screen flex flex-col">
-        <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Filter {type === "income" ? "Incomes" : "Expenses"}
-          </h2>
+        {/* Mobile menu button */}
+        <div className="lg:hidden fixed top-4 left-4 z-50">
           <button
+            type="button"
+            className="p-2 bg-white border border-gray-200 text-gray-600 hover:bg-gray-100 rounded-lg shadow-sm"
+            data-hs-overlay="#hs-sidebar-footer"
+            aria-label="Toggle navigation"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        </div>
+        <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-gray-800 lg:block hidden">
+            Filter
+          </h2>
+          <div className="lg:hidden h-8"></div>
+          <button
+            className="py-2 px-4 inline-flex items-center font-medium text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden ml-auto"
             onClick={handleLogout}
-            className="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Logout
           </button>
