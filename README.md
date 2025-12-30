@@ -1,6 +1,23 @@
 # SmartStudent Frontend
 
-A modern CRUD application built with Vite-React that provides an intuitive interface for students to manage their finances, complementing the SmartStudent backend service.
+A full stack Smart Expense Tracking application built with Spring Boot (Backend) and ReactJS (Frontend) that provides an intuitive interface for students to manage their finances with CRUD (Create, Read, Update, Delete) operations.
+
+## Screenshots Demo
+
+### HomePage
+<img width="1352" height="762" alt="ss_1" src="https://github.com/user-attachments/assets/46e379d1-fab4-4214-b650-dd221303eae7" />
+
+### Login
+<img width="830" height="710" alt="ss_3" src="https://github.com/user-attachments/assets/cd137fc7-999c-457d-9308-d03cfae41147" />
+
+### Dashboard
+<img width="1897" height="923" alt="ss_4" src="https://github.com/user-attachments/assets/4b2a8c58-8e46-42c7-ad49-36cbe5a0ced8" />
+
+## 🎯 Motivation
+SmartStudent was built to help students develop better financial habits by
+tracking income and expenses in a simple, distraction-free interface.
+The project focuses on real-world authentication flows, secure APIs,
+and scalable frontend architecture.
 
 ## 📋 Features
 
@@ -8,6 +25,7 @@ A modern CRUD application built with Vite-React that provides an intuitive inter
   - Secure login/signup with email verification
   - Protected routes for authenticated users
   - JWT token management
+  - OAuth2 social login with Google and Github (WIP)
 
 - **Dashboard Analytics**:
   - Overview of total income and expenses
@@ -21,20 +39,21 @@ A modern CRUD application built with Vite-React that provides an intuitive inter
   - Add category by type (Expense/Income)
 
 - **Responsive Design**:
+  - Used [Preline UI](https://preline.co/) Tailwind CSS Library
   - Mobile-first approach
   - Seamless experience across devices
   - Interactive sidebar navigation
 
 ## 🛠️ Tech Stack
 
-- **Framework**: React with Vite
+- **Framework**: React with Vite CLI
 - **Routing**: React Router v6
 - **Styling**: Tailwind CSS + Preline UI
 - **State Management**: React Context API
 - **HTTP Client**: Axios
 - **Form Handling**: React Hook Form
 - **Notifications**: React Hot Toast
-- **Authentication**: JWT
+- **Authentication**: JWT, OAuth2
 - **Backend Service**: [SmartStudent Backend](https://github.com/shihabhasan0161/SmartStudent-Backend)
 
 ## 🚀 Getting Started
@@ -93,6 +112,8 @@ src/
 4. Login with credentials
 5. JWT token stored in localStorage
 6. Protected routes accessible
+7. Register/Login directly with OAuth2 with Google or Github (WIP)
+8. Email verification is not required if logged in with Social
 
 ## 🎨 Components
 
@@ -131,6 +152,14 @@ The frontend communicates with the SmartStudent backend through these endpoints:
 - `/incomes`: Income management
 - `/categories`: Category management
 - `/filter`: Transaction filtering
+
+## 📚 What I Learned
+- Integrating a React frontend with a Spring Boot backend
+- Implementing JWT-based authentication with protected routes
+- Designing reusable React components with Context API
+- Handling async API calls and global error states
+- Structuring a scalable full-stack application
+- Implementing OAuth2 for secure login with Google and Github
 
 ## 🤝 Contributing
 
